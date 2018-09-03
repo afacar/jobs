@@ -14,23 +14,25 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class App extends React.Component {
   render() {
+    const ReviewNavigator = createStackNavigator({
+      review: { screen: ReviewScreen },
+      settings: { screen: SettingsScreen }
+    });
+
     const MainNavigator = createBottomTabNavigator({
+      map: { screen: MapScreen },
+      deck: { screen: DeckScreen },
+      reviews: { screen: ReviewNavigator }
+      },
+      {
+        tabBarPosition: 'bottom'
+      });
+
+    const AppNavigator = createBottomTabNavigator({
       welcome: {screen: WelcomeScreen},
       auth: {screen: AuthScreen},
       main: {
-        screen: createBottomTabNavigator({
-          map: { screen: MapScreen },
-          deck: { screen: DeckScreen },
-          stack: {
-            screen: createStackNavigator({
-              review: { screen: ReviewScreen },
-              settings: { screen: SettingsScreen }
-            })
-          }
-        },
-        {
-          tabBarPosition: 'bottom'
-        })
+        screen: MainNavigator
       }
     },
     {
@@ -43,7 +45,9 @@ export default class App extends React.Component {
     });
 
     return (
-        <MainNavigator />
+      <View style={styles.container} >
+        <AppNavigator />
+      </View>
     );
   }
 }
