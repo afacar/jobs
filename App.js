@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { Provider } from 'react-redux';
 
+import store from './store';
 import AuthScreen from './screens/AuthScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import MapScreen from './screens/MapScreen';
@@ -36,18 +38,21 @@ export default class App extends React.Component {
       }
     },
     {
-      tabBarOptions: {
-          style: {
-              width: SCREEN_WIDTH
-          }
-      },
-      tabBarPosition: 'bottom'
+      // Biggest GOTCHA in the world!
+      // React Navigator renders every compoenent given in advance 
+      // We should give following object
+      lazy: true,
+      navigationOptions: { 
+        tabBarVisible: false
+      }
     });
 
     return (
-      <View style={styles.container} >
-        <AppNavigator />
-      </View>
+      <Provider store={store} >
+        <View style={styles.container} >
+          <AppNavigator />
+        </View>
+      </Provider>
     );
   }
 }
