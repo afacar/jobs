@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Button, View, Dimensions } from 'react-native';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 
@@ -27,20 +27,22 @@ export default class App extends React.Component {
       reviews: { screen: ReviewNavigator }
       },
       {
-        tabBarPosition: 'bottom'
+        tabBarOptions: {
+          labelStyle: { fontSize: 16 }
+        },
+        tabBarPosition: 'bottom',
+        swipeEnabled: true
       });
 
     const AppNavigator = createBottomTabNavigator({
-      welcome: {screen: WelcomeScreen},
-      auth: {screen: AuthScreen},
-      main: {
-        screen: MainNavigator
-      }
+      welcome: { screen: WelcomeScreen },
+      auth: { screen: AuthScreen },
+      main: { screen: MainNavigator }
     },
     {
       // Biggest GOTCHA in the world!
-      // React Navigator renders every compoenent given in advance 
-      // We should give following object
+      // React Navigator renders every compoenent given in advance EAGERLY
+      // We should give following lazy: true prop to make it render lazy
       lazy: true,
       navigationOptions: { 
         tabBarVisible: false

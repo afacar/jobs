@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { Card, Button, Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 import { MapView } from 'expo';
 import * as actions from '../actions';
 
 class DeckScreen extends Component {
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Jobs',
+        tabBarIcon: ({ tintColor }) => {
+                return <Icon name="description" size={30} color={tintColor} />;
+        }
+    });
+
     renderCard(job) {
         console.log('JOB', job);
         const initialRegion = {
@@ -32,15 +39,27 @@ class DeckScreen extends Component {
                     <Text>{job.created_at}</Text>
                 </View>
                 <Text>
-                    {job.description}
+                    {job.description.substring(0, 40)}
                 </Text>
             </Card>
         );
     }
 
+    // Big GOTCHA: since this renderNoMoreCard is called from Swipe component
+    // this.props.navigation.navigate('map') is undefined
+    // Because Swipe is not defined as scene in React.Navigation at App.js
+    // Thus, we bind context to method while sending it to Swipe
+    // As this.renderNoMoreCards.bind(this)
     renderNoMoreCards() {
         return (
             <Card title="No more jobs!">
+                <Button 
+                    title="Back to Map"
+                    large
+                    icon={{ name: 'my-location' }}
+                    backgroundColor="#03A9F4"
+                    onPress={() => this.props.navigation.navigate('map')}
+                />
             </Card>
         );
     }
@@ -51,8 +70,8 @@ class DeckScreen extends Component {
                 <Swipe 
                     data={this.props.jobs}
                     renderCard={this.renderCard}
-                    renderNoMoreCards={this.renderNoMoreCards}
-                    onSwipeRight={job => this.props.likeJob(job)}
+                    renderNoMoreCards={this.renderNoMoreCards.bind(this)}
+                    onSwipeRight={job => this.props.likeJobs(job)}
                     keyProp="id"
                 />
             </View>

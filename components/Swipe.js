@@ -103,26 +103,25 @@ class Swipe extends Component {
         return (
           <Animated.View
             key={item[this.props.keyProp]}
-            style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
+            style={[this.getCardStyle(), styles.cardStyle]}
             {...this.state.panResponder.panHandlers}
           >
             {this.props.renderCard(item)}
           </Animated.View>
         );
       }
-
+      // Check zIndex!
       return (
         <Animated.View
           key={item[this.props.keyProp]}
-          style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: -i }]}
+          style={[styles.cardStyle, { top: 10 * (i - this.state.index) }]}
         >
           {this.props.renderCard(item)}
         </Animated.View>
       );
     });
 
-    return Platform.OS === 'android' ? deck : deck.reverse();
-
+    return deck.reverse();
   }
 
   render() {
